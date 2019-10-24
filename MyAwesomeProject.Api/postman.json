@@ -1,0 +1,780 @@
+{
+	"info": {
+		"_postman_id": "511b0e43-a662-488f-a2cd-98f87f902dc7",
+		"name": "jab.net",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AuthController Register",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "12326000-7919-49ad-a452-de83ad85000d",
+						"exec": [
+							"pm.globals.clear()\r",
+							"\r",
+							"function uuidv4() {\r",
+							"  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\r",
+							"    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\r",
+							"    return v.toString(16);\r",
+							"  });\r",
+							"}\r",
+							"\r",
+							"let firstName = uuidv4();\r",
+							"let lastName = uuidv4();\r",
+							"let username = uuidv4();\r",
+							"let password = uuidv4();\r",
+							"\r",
+							"pm.globals.set('ADMIN_FIRST_NAME', firstName);\r",
+							"pm.globals.set('ADMIN_LAST_NAME', lastName);\r",
+							"pm.globals.set('ADMIN_USERNAME', username);\r",
+							"pm.globals.set('ADMIN_PASSWORD', password);\r",
+							"var moment = require('moment');\r",
+							"pm.globals.set(\"TIMESTAMP\", moment().format(\"MM/DD/YYYY\"));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "75bb88c0-c3c3-4935-9fd9-b5a581e4f8de",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"{{ADMIN_FIRST_NAME}}\",\r\n  \"lastName\": \"{{ADMIN_LAST_NAME}}\",\r\n  \"username\": \"{{ADMIN_USERNAME}}\",\r\n  \"password\": \"{{ADMIN_PASSWORD}}\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{URL}}/api/auth/register",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuthController Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "12326000-7919-49ad-a452-de83ad85000d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "75bb88c0-c3c3-4935-9fd9-b5a581e4f8de",
+						"exec": [
+							"var body = JSON.parse(responseBody);\r",
+							"pm.globals.set('TOKEN', body.token);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"{{ADMIN_USERNAME}}\",\r\n  \"password\": \"{{ADMIN_PASSWORD}}\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{URL}}/api/auth/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+		,
+{
+	"name": "AuthorController POST",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"var body = JSON.parse(responseBody);\r",
+					"pm.globals.set('AUTHOR_ID', body.id);\r",
+					"\r",
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "POST",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			},
+			{
+				"key": "Content-Type",
+				"value": "application/json",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "raw",
+			"raw": "{\"authorName\": \"{{$guid}}\",\"bookAuthors\": [ {\"BookId\": \"{{BOOK_ID}}\"} ]}"
+		},
+		"url": {
+			"raw": "{{URL}}/api/author",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"author"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "BookController POST",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"var body = JSON.parse(responseBody);\r",
+					"pm.globals.set('BOOK_ID', body.id);\r",
+					"\r",
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "POST",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			},
+			{
+				"key": "Content-Type",
+				"value": "application/json",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "raw",
+			"raw": "{\"bookName\": \"{{$guid}}\",\"price\": \"99.99\",\"categoryId\": \"{{CATEGORY_ID}}\"}"
+		},
+		"url": {
+			"raw": "{{URL}}/api/book",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"book"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "CategoryController POST",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"var body = JSON.parse(responseBody);\r",
+					"pm.globals.set('CATEGORY_ID', body.id);\r",
+					"\r",
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "POST",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			},
+			{
+				"key": "Content-Type",
+				"value": "application/json",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "raw",
+			"raw": "{\"categoryName\": \"{{$guid}}\"}"
+		},
+		"url": {
+			"raw": "{{URL}}/api/category",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"category"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "AuthorController GET",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "GET",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/author",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"author"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "BookController GET",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "GET",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/book",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"book"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "CategoryController GET",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "GET",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/category",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"category"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "AuthorController  PUT/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "PUT",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			},
+			{
+				"key": "Content-Type",
+				"value": "application/json",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "raw",
+			"raw": "{\"authorName\": \"{{$guid}}\",\"bookAuthors\": [ {\"BookId\": \"{{BOOK_ID}}\"} ]}"
+		},
+		"url": {
+			"raw": "{{URL}}/api/author/{{AUTHOR_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"author",
+				"{{AUTHOR_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "BookController  PUT/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "PUT",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			},
+			{
+				"key": "Content-Type",
+				"value": "application/json",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "raw",
+			"raw": "{\"bookName\": \"{{$guid}}\",\"price\": \"99.99\",\"categoryId\": \"{{CATEGORY_ID}}\"}"
+		},
+		"url": {
+			"raw": "{{URL}}/api/book/{{BOOK_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"book",
+				"{{BOOK_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "CategoryController  PUT/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "PUT",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			},
+			{
+				"key": "Content-Type",
+				"value": "application/json",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "raw",
+			"raw": "{\"categoryName\": \"{{$guid}}\"}"
+		},
+		"url": {
+			"raw": "{{URL}}/api/category/{{CATEGORY_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"category",
+				"{{CATEGORY_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "AuthorController GET/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "GET",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/author/{{AUTHOR_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"author",
+				"{{AUTHOR_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "BookController GET/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "GET",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/book/{{BOOK_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"book",
+				"{{BOOK_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "CategoryController GET/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "GET",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/category/{{CATEGORY_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"category",
+				"{{CATEGORY_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "AuthorController DELETE/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "DELETE",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/author/{{AUTHOR_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"author",
+				"{{AUTHOR_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "BookController DELETE/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "DELETE",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/book/{{BOOK_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"book",
+				"{{BOOK_ID}}"
+			]
+		}
+	},
+	"response": []
+},
+{
+	"name": "CategoryController DELETE/id",
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"id": "__GUID__",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {\r",
+					"   pm.response.to.have.status(200);\r",
+					"});"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"request": {
+		"method": "DELETE",
+		"header": [
+			{
+				"key": "Authorization",
+				"value": "Bearer {{TOKEN}}",
+				"type": "text"
+			}
+		],
+		"url": {
+			"raw": "{{URL}}/api/category/{{CATEGORY_ID}}",
+			"host": [
+				"{{URL}}"
+			],
+			"path": [
+				"api",
+				"category",
+				"{{CATEGORY_ID}}"
+			]
+		}
+	},
+	"response": []
+}
+	]
+}

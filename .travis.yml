@@ -1,0 +1,21 @@
+{
+  "language": "csharp",
+  "mono": "none",
+  "sudo": "required",
+  "dist": "xenial",
+  "dotnet": 2.2,
+  "solution": "MyAwesomeProject.sln",
+  "script": [
+    "dotnet restore",
+    "dotnet test",
+    "dotnet publish -c Release -r win-x86 --output ./dist MyAwesomeProject.sln"
+  ],
+  "env": {
+    "global": [
+      "FTP_USER=your_username",
+      "FTP_PASSWORD=your_password"
+    ]
+  },
+  "after_success": [
+  ]
+}
